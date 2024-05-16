@@ -1,0 +1,20 @@
+distances(a, b, 10).
+distances(a, c, 15).
+distances(a, d, 20).
+distances(b, c, 35).
+distances(b, d, 25).
+distances(c, d, 30).
+
+distance(X, Y, D) :- distances(X, Y, D).
+distance(X, Y, D) :- distances(Y, X, D).
+
+tsp(Start, Path, Distance) :-
+    findall(D, tsp_helper(Start, [Start], D), Distances),
+    min_list(Distances, Distance),
+    tsp_helper(Start, Path, Distance).
+
+tsp_helper(Current, Visited, Distance) :-
+    distance(Current, Next, D),
+    \+ member(Next, Visited),
+    tsp_helper(Next, [Next|Visited], RestDistance),
+    Distance is D + RestDistance.
